@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - my_network
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: taskmanagerdb
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
