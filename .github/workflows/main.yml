@@ -1,0 +1,44 @@
+name: Deploy Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Build and start containers
+        run: |
+          docker-compose build
+          docker-compose up -d
+
+      - name: Wait for containers to be ready
+        run: sleep 15
+
+      - name: Check containers status
+        run: docker-compose ps
+
+      - name: Check web container logs
+        run: docker-compose logs web
+
+      - name: Check database container logs
+        run: docker-compose logs db
+
+      - name: Test application connection
+        run: |
+          curl -f http://localhost:8000 || exit 1
+
+      - name: Cleanup
+        run: docker-compose down
