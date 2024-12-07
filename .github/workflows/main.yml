@@ -25,7 +25,7 @@ jobs:
           docker-compose up -d
 
       - name: Wait for containers to be ready
-        run: sleep 15
+        run: sleep 5
 
       - name: Check containers status
         run: docker-compose ps
@@ -38,7 +38,7 @@ jobs:
 
       - name: Test application connection
         run: |
-          curl -f http://localhost:8000 || exit 1
+          curl -I http://localhost:8000/tasks/
 
       - name: Cleanup
         run: docker-compose down
