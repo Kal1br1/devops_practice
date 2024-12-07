@@ -1,8 +1,0 @@
-<h1>{{ task.title }}</h1>
-<p>{{ task.description }}</p>
-<p>Created at: {{ task.created_at }}</p>
-<a href="{% url 'task_update' task.id %}">Edit</a>
-<form method="post" action="{% url 'task_delete' task.id %}">
-    {% csrf_token %}
-    <button type="submit">Delete</button>
-</form>
