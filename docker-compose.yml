@@ -8,7 +8,8 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - my_network
 
@@ -22,7 +23,13 @@ services:
       - ./initdb:/docker-entrypoint-initdb.d
     networks:
       - my_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 networks:
   my_network:
     driver: bridge
+
